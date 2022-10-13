@@ -59,8 +59,8 @@ fun Project.setupCore() {
     setupCommon()
     android.apply {
         defaultConfig {
-            versionCode = 5030150
-            versionName = "5.3.1-nightly"
+            versionCode = 5030151
+            versionName = "5.3.2"
         }
         compileOptions.isCoreLibraryDesugaringEnabled = true
         lint.apply {
@@ -68,7 +68,7 @@ fun Project.setupCore() {
             warning += "RestrictedApi"
             disable += "UseAppTint"
         }
-        ndkVersion = "21.4.7075529"
+        ndkVersion = "25.1.8937393"
     }
     dependencies.add("coreLibraryDesugaring", "com.android.tools:desugar_jdk_libs:1.1.6")
 }

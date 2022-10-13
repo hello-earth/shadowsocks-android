@@ -21,6 +21,7 @@
 package com.github.shadowsocks
 
 import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.os.Bundle
 import android.os.RemoteException
 import android.view.KeyCharacterMap
@@ -44,6 +45,7 @@ import com.github.shadowsocks.bg.BaseService
 import com.github.shadowsocks.preference.DataStore
 import com.github.shadowsocks.preference.OnPreferenceDataStoreChangeListener
 import com.github.shadowsocks.subscription.SubscriptionFragment
+import com.github.shadowsocks.subscription.SubscriptionService
 import com.github.shadowsocks.utils.Key
 import com.github.shadowsocks.utils.StartService
 import com.github.shadowsocks.widget.ListHolderListener
@@ -162,6 +164,9 @@ class MainActivity : AppCompatActivity(), ShadowsocksConnection.Callback, OnPref
         changeState(BaseService.State.Idle, animate = false)    // reset everything to init state
         connection.connect(this, this)
         DataStore.publicStore.registerChangeListener(this)
+
+
+        this.startService(Intent(this, SubscriptionService::class.java))
     }
 
     override fun onPreferenceDataStoreChanged(store: PreferenceDataStore, key: String) {
