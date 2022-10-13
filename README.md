@@ -26,6 +26,32 @@ for Android TV ([beta](https://play.google.com/apps/testing/com.github.shadowsoc
   $ rustup target add armv7-linux-androideabi aarch64-linux-android i686-linux-android x86_64-linux-android
 ```
 
+* About Subscript file's format
+ ```bash
+[
+  {
+  "server": "123.121.com",
+  "server_port": 12345,
+  "password": "12363",
+  "method": "chacha20-ietf-poly1305",
+  "remarks": "",
+  "route": "gfwlist",
+  "remote_dns": "dns.google",
+  "ipv6": false,
+  "metered": false,
+  "proxy_apps": {
+    "enabled": true,
+    "bypass": false,
+    "android_list": [
+      "com.google.android.gms",
+      "com.google.android.gsf"
+    ]
+  },
+  "udpdns": false
+  }
+]
+```
+
 ### BUILD
 
 You can check whether the latest commit builds under UNIX environment by checking Travis status.
