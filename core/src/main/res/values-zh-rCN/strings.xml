@@ -27,7 +27,7 @@
     <string name="stat_summary">"上传: \t%3$s\t↑\t%1$s
 下载: \t%4$s\t↓\t%2$s"</string>
     <string name="connection_test_testing">"测试中…"</string>
-    <string name="connection_test_available">"连接成功：HTTPS 握手延时 %d 毫秒"</string>
+    <string name="connection_test_available">"连接成功：HTTPS 握手延时 %d ms\n%s"</string>
     <string name="connection_test_error">"失败：%s"</string>
     <string name="connection_test_fail">"无互联网连接"</string>
     <string name="connection_test_error_status_code">"状态码无效（#%d）"</string>

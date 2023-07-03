@@ -22,6 +22,7 @@ package com.github.shadowsocks.bg
 
 import android.net.LocalSocket
 import android.os.SystemClock
+import com.github.shadowsocks.Core
 import com.github.shadowsocks.aidl.TrafficStats
 import com.github.shadowsocks.database.ProfileManager
 import com.github.shadowsocks.net.LocalSocketListener
@@ -60,6 +61,8 @@ class TrafficMonitor(statFile: File) {
     private var timestampLast = 0L
     private var dirty = false
     private var persisted: TrafficStats? = null
+    var failCount = 0;
+    val badProfile = arrayListOf<Long>()
 
     fun requestUpdate(): Pair<TrafficStats, Boolean> {
         val now = SystemClock.elapsedRealtime()
@@ -71,6 +74,11 @@ class TrafficMonitor(statFile: File) {
                 out = current.copy().apply {
                     txRate = (txTotal - out.txTotal) * 1000 / delta
                     rxRate = (rxTotal - out.rxTotal) * 1000 / delta
+//                    if (txRate>0 && rxRate == 0L && failCount<100){
+//                        failCount+=1
+//                    }else{
+//                        failCount = 0
+//                    }
                 }
                 dirty = false
                 updated = true
@@ -107,5 +115,17 @@ class TrafficMonitor(statFile: File) {
             DirectBoot.update(profile)
             DirectBoot.listenForUnlock()
         }
+//        if(failCount > 10){
+//            val profiles = ProfileManager.getActiveProfiles()?.toMutableList() ?: mutableListOf()
+//            profiles.forEach { profile ->
+//                run {
+//                    if (profile.id != id && !badProfile.contains(profile.id)) {
+//                        Core.switchProfile(profile.id)
+//                        Core.reloadService()
+//                        badProfile.add(id)
+//                    }
+//                }
+//            }
+//        }
     }
 }

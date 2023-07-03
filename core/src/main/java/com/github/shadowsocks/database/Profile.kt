@@ -75,6 +75,7 @@ data class Profile(
         var subscription: SubscriptionStatus = SubscriptionStatus.UserConfigured,
         var tx: Long = 0,
         var rx: Long = 0,
+        var ping: Long = 0,
         var userOrder: Long = 0,
 
         @Ignore // not persisted in db, only used by direct boot

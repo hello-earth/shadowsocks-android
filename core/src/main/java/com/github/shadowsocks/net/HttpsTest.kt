@@ -33,7 +33,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.io.BufferedReader
 import java.io.IOException
+import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.Proxy
 import java.net.URL
@@ -53,8 +55,8 @@ class HttpsTest : ViewModel() {
         object Testing : Status() {
             override val status get() = app.getText(R.string.connection_test_testing)
         }
-        class Success(private val elapsed: Long) : Status() {
-            override val status get() = app.getString(R.string.connection_test_available, elapsed)
+        class Success(private val elapsed: Long, private val ip: String) : Status() {
+            override val status get() = app.getString(R.string.connection_test_available, elapsed, ip)
         }
         sealed class Error : Status() {
             override val status get() = app.getText(R.string.connection_test_fail)
@@ -82,11 +84,11 @@ class HttpsTest : ViewModel() {
     fun testConnection() {
         cancelTest()
         status.value = Status.Testing
-        val url = URL("https://cp.cloudflare.com")
+        val url = URL("http://sspanel.net/ip.php")
         val conn = (if (DataStore.serviceMode != Key.modeVpn) {
             url.openConnection(Proxy(Proxy.Type.SOCKS, DataStore.proxyAddress))
         } else url.openConnection()) as HttpURLConnection
-        conn.setRequestProperty("Connection", "close")
+        conn.setRequestProperty("Referer", "http://ip111.cn/")
         conn.instanceFollowRedirects = false
         conn.useCaches = false
         running = GlobalScope.launch(Dispatchers.Main.immediate) {
@@ -95,7 +97,17 @@ class HttpsTest : ViewModel() {
                     val start = SystemClock.elapsedRealtime()
                     val code = responseCode
                     val elapsed = SystemClock.elapsedRealtime() - start
-                    if (code == 204 || code == 200 && responseLength == 0L) Status.Success(elapsed)
+                    if (code == 204 || code == 200) {
+                        val inBufferedReader = BufferedReader(InputStreamReader(conn.getInputStream()))
+                        var line : String
+                        var result = ""
+                        line = inBufferedReader.readLine()
+                        while (line != null) {
+                            result += "/n" + line
+                            line = inBufferedReader.readLine()
+                        }
+                        Status.Success(elapsed, result)
+                    }
                     else Status.Error.UnexpectedResponseCode(code)
                 } catch (e: IOException) {
                     Status.Error.IOFailure(e)
