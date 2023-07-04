@@ -84,7 +84,7 @@ class HttpsTest : ViewModel() {
     fun testConnection() {
         cancelTest()
         status.value = Status.Testing
-        val url = URL("http://sspanel.net/ip.php")
+        val url = URL("http://www.google.com")
         val conn = (if (DataStore.serviceMode != Key.modeVpn) {
             url.openConnection(Proxy(Proxy.Type.SOCKS, DataStore.proxyAddress))
         } else url.openConnection()) as HttpURLConnection
@@ -98,15 +98,7 @@ class HttpsTest : ViewModel() {
                     val code = responseCode
                     val elapsed = SystemClock.elapsedRealtime() - start
                     if (code == 204 || code == 200) {
-                        val inBufferedReader = BufferedReader(InputStreamReader(conn.getInputStream()))
-                        var line : String
-                        var result = ""
-                        line = inBufferedReader.readLine()
-                        while (line != null) {
-                            result += "/n" + line
-                            line = inBufferedReader.readLine()
-                        }
-                        Status.Success(elapsed, result)
+                        Status.Success(elapsed, "")
                     }
                     else Status.Error.UnexpectedResponseCode(code)
                 } catch (e: IOException) {
